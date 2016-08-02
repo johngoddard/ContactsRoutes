@@ -9,5 +9,7 @@
 User.create!(username:"john")
 User.create!(username:"jesson")
 
-Contact.create!(name: "Snax", email: "snax@aa.io")
+Contact.create!(name: "Snax", email: "snax@aa.io", user_id: 1)
 Contact.create!(name: "Mittens", email:"mit@petco.io", user_id: 2, favorite: false)
+
+ContactShare.create(contact_id: 2, favorite: true, user_id: 1 )

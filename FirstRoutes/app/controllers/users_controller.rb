@@ -46,10 +46,14 @@ class UsersController < ApplicationController
   end
 
   def favorites
-    favorite_contacts = User.find_by(id: params[:id]).contacts.where(favorite: true)
-    # favorite_shared = User.find_by(id: 1).shared_contacts.joins("contact_shares").where("\"contact_shares\".favorite = :val", val: true)
-    favorite_shares = User.find_by(id: params[:id]).contact_shares.where(favorite: true)
-    favorite_shared = favorite_shares.map{|share| share.contact}
+    favorite_contacts = User.find_by(id: params[:id])
+                            .contacts
+                            .where(favorite: true)
+
+    favorite_shared = User.find_by(id: params[:id])
+                          .shared_contacts
+                          .joins(:contact_shares)
+                          .where("contact_shares.favorite = ?", true)
 
     render json: [favorite_contacts, favorite_shared]
   end
