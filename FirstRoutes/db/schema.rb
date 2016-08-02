@@ -11,13 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160801212047) do
+ActiveRecord::Schema.define(version: 20160801235915) do
+
+  create_table "comments", force: :cascade do |t|
+    t.text     "text",             null: false
+    t.integer  "author_id",        null: false
+    t.integer  "commentable_id",   null: false
+    t.string   "commentable_type", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "comments", ["author_id"], name: "index_comments_on_author_id"
+  add_index "comments", ["commentable_id"], name: "index_comments_on_commentable_id"
 
   create_table "contact_shares", force: :cascade do |t|
-    t.integer  "contact_id", null: false
-    t.integer  "user_id",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "contact_id",                 null: false
+    t.integer  "user_id",                    null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "favorite",   default: false
   end
 
   add_index "contact_shares", ["contact_id", "user_id"], name: "index_contact_shares_on_contact_id_and_user_id", unique: true
@@ -25,15 +38,35 @@ ActiveRecord::Schema.define(version: 20160801212047) do
   add_index "contact_shares", ["user_id"], name: "index_contact_shares_on_user_id"
 
   create_table "contacts", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.string   "email",      null: false
-    t.integer  "user_id",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                       null: false
+    t.string   "email",                      null: false
+    t.integer  "user_id",                    null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "favorite",   default: false
   end
 
   add_index "contacts", ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true
   add_index "contacts", ["user_id"], name: "index_contacts_on_user_id"
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.integer  "group_id",   null: false
+    t.integer  "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "group_memberships", ["contact_id"], name: "index_group_memberships_on_contact_id"
+  add_index "group_memberships", ["group_id"], name: "index_group_memberships_on_group_id"
+
+  create_table "groups", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "group_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "groups", ["user_id"], name: "index_groups_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username",   null: false
